@@ -27,19 +27,6 @@ plt.ion()
 
 
 
-def process_frame(frame):
-    # we assume frame shape is (H, W, 3) for an RGB image
-    mean = np.mean(frame, (0, 1)).astype(float)
-    min = np.min(frame, (0, 1)).astype(float)
-    max = np.max(frame, (0, 1)).astype(float)
-    return {
-        "mean": mean,
-        "min": min,
-        "max": max,
-    }
-
-
-
 # models setup
 
 #vgg16 setup
@@ -74,9 +61,6 @@ resnet50.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
 
 
 
-
-
-
 #Gets Prediction of Tile
 def get_prediction(model, image_bytes):
     tensor = transform_image(image_bytes=image_bytes)
@@ -98,7 +82,7 @@ def transform_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes))
     return my_transforms(image).unsqueeze(0)
 
-
+#performs inference on image
 def ImageInference(model = model, image = sample):
 
     fullimage = Image.open(image)
@@ -156,7 +140,7 @@ def main():
             logging.info("image inference")
             logging.info("data: %s", results["data"])
 
-            plugin.publish("image.mean.red", results["mean"][0])
+            plugin.publish("image.data", results["data"])
            
 
             logging.info("published summary")
