@@ -1,3 +1,4 @@
+from __future__ import print_function, division
 #!/usr/bin/env python3
 import argparse
 import logging
@@ -5,7 +6,6 @@ import time
 import numpy as np
 from waggle.plugin import Plugin
 from waggle.data.vision import Camera
-from __future__ import print_function, division
 import os
 from PIL import Image
 import pandas as pd
@@ -83,7 +83,7 @@ def transform_image(image_bytes):
     return my_transforms(image).unsqueeze(0)
 
 #performs inference on image
-def ImageInference(model = model, image = sample):
+def ImageInference(model, image):
 
     fullimage = Image.open(image)
     fullimage = fullimage.resize((1344, 1344))
