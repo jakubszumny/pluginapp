@@ -1,11 +1,11 @@
-name: "numpy-example"
-description: "Numpy example which computes some stats of a test frame."
+name: "Smoke-Detection"
+description: "Detects Smoke In Live Camera Images"
 version: "0.3.0"
-authors: "Sean Shahkarami <sshahkarami@anl.gov>"
-keywords: "example, tutorial, numpy, hackathon"
+authors: "Jakub Szumny <jszumny@anl.gov>"
+keywords: "smoke, detection, inference"
 source:
   architectures:
     - "linux/amd64"
     - "linux/arm64"
-  url: "https://github.com/waggle-sensor/plugin-numpy-example"
+  url: "https://github.com/jakubszumny/pluginapp"
   branch: "main"
