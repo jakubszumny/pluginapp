@@ -42,20 +42,20 @@ features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer wit
 vgg16.classifier = nn.Sequential(*features) # Replace the model classifier
 
 
-#resnet18 setup
-resnet18 = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
-num_features = resnet18.fc.in_features     #extract fc layers features
-resnet18.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
+# #resnet18 setup
+# resnet18 = torch.hub.load('pytorch/vision:v0.10.0', 'resnet18', pretrained=True)
+# num_features = resnet18.fc.in_features     #extract fc layers features
+# resnet18.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
 
-#resnet34 setup
-resnet34 = torch.hub.load('pytorch/vision:v0.10.0', 'resnet34', pretrained=True)
-num_features = resnet34.fc.in_features     #extract fc layers features
-resnet34.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
+# #resnet34 setup
+# resnet34 = torch.hub.load('pytorch/vision:v0.10.0', 'resnet34', pretrained=True)
+# num_features = resnet34.fc.in_features     #extract fc layers features
+# resnet34.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
 
-#resnet50 setup
-resnet50 = torch.hub.load('pytorch/vision:v0.10.0', 'resnet50', pretrained=True)
-num_features = resnet50.fc.in_features     #extract fc layers features
-resnet50.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
+# #resnet50 setup
+# resnet50 = torch.hub.load('pytorch/vision:v0.10.0', 'resnet50', pretrained=True)
+# num_features = resnet50.fc.in_features     #extract fc layers features
+# resnet50.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
 
 
 
