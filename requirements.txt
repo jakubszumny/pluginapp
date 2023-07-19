@@ -5,12 +5,10 @@ pywaggle[vision]==0.52.*
 
 # Custom Python modules. Please add your requirements below.
 argparse
-logging
 os
 Pillow
 pandas
 torch
 torchvision
 matplotlib
-copy
 io
