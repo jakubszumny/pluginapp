@@ -135,7 +135,8 @@ def main():
 
         for sample in cam.stream():
             logging.info("processing frame")
-            results = ImageInference(sample.data)
+            results = sample.data #ImageInference(sample.data)
+            # print(sample.data)
             
             logging.info("image inference")
             logging.info("data: %s", results["data"])
