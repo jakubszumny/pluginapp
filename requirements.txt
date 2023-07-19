@@ -7,6 +7,6 @@ pywaggle[vision]==0.52.*
 argparse
 Pillow
 pandas
-torch
-torchvision
+torch==main
+torchvision==main
 matplotlib
