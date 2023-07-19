@@ -5,7 +5,6 @@ pywaggle[vision]==0.52.*
 
 # Custom Python modules. Please add your requirements below.
 argparse
-os
 Pillow
 pandas
 torch
