@@ -147,8 +147,7 @@ def transform_image(image_bytes):
 #performs inference on image
 def ImageInference(image):
 
-    fullimage = Image.open(image)
-    fullimage = fullimage.resize((1344, 1344))
+    fullimage = image.resize((1344, 1344))
     fullimage = fullimage.crop((0, 448, 1344, 1344))
 
     data = []
@@ -183,7 +182,10 @@ def main():
 
         for sample in cam.stream():
             logging.info("processing frame")
-            results = ImageInference(sample.data)
+            from matplotlib import cm
+            image = Image.fromarray(np.uint8(cm.gist_earth(sample.data)*255))
+
+            results = ImageInference(image)
             # print(sample.data)
             
             logging.info("image inference")
@@ -198,4 +200,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main() 
+main()
