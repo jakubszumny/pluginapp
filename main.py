@@ -159,8 +159,10 @@ def ImageInference(image):
             
             d = {"xtile": str(i), "ytile": str(k),"class": pred, "percentage": '{0:.2f}'.format(conf)}
             data.append(d)
-            
-    return data
+    
+    df = pd.DataFrame(data)
+    csv = df.to_csv()
+    return csv
 
 
 
@@ -190,6 +192,7 @@ def main():
             
             logging.info("image inference")
             logging.info("data: %s", results["data"])
+            plugin.upload_file(results)
 
             plugin.publish("image.data", results["data"])
            
