@@ -81,6 +81,7 @@ class VGG16():
 
     def run(self, tile, args):
 
+        logging.info("Performing Inference on Given Tile")
         with open(tile, 'rb') as f:
                 image_bytes = f.read()
                 
@@ -146,10 +147,11 @@ def transform_image(image_bytes):
 
 #performs inference on image
 def ImageInference(image):
-
+    logging.info("Resizing and Cropping Image")
     fullimage = image.resize((1344, 1344))
     fullimage = fullimage.crop((0, 448, 1344, 1344))
 
+    logging.ingo("Looping through tiles")
     data = []
     for i in range(6):
         for k in range(4):
@@ -194,9 +196,8 @@ def main():
         
             plugin.upload_file("results.csv")
 
-            plugin.publish("image.data", len(results[results["class"] == "smoke"]))
+            plugin.publish("smoke_detection", len(results[results["class"] == "smoke"]))
            
-
             logging.info("published summary")
 
             time.sleep(args.interval)
