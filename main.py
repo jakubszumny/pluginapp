@@ -161,8 +161,7 @@ def ImageInference(image):
             data.append(d)
     
     df = pd.DataFrame(data)
-    csv = df.to_csv()
-    return csv
+    return df
 
 
 
@@ -189,12 +188,13 @@ def main():
 
             results = ImageInference(image)
             # print(sample.data)
-            
+            results.to_csv("results.csv")
             logging.info("image inference")
             logging.info("data: %s", results["data"])
-            plugin.upload_file(results)
+        
+            plugin.upload_file("results.csv")
 
-            plugin.publish("image.data", results["data"])
+            plugin.publish("image.data", len(results[results["class"] == "smoke"]))
            
 
             logging.info("published summary")
