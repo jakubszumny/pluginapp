@@ -46,7 +46,7 @@ def get_arguments():
 
     parser.add_argument(
         '-stream', dest='stream',
-        action='store', default="bottom",
+        action='store', default="Bottom",
         help='ID or name of a stream, e.g. sample')
     parser.add_argument(
         '-continuous', dest='continuous',
