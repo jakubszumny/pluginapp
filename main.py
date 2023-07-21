@@ -28,6 +28,67 @@ plt.ion()
 
 
 # models setup
+def get_arguments():
+    parser = argparse.ArgumentParser(
+        description="Evaluate a trained model on live images."
+    )
+
+    parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
+    parser.add_argument('--labels', dest='labels',
+                        action='store', default='coco.names', type=str,
+                        help='Labels for detection')
+
+
+    parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --class 0, or --class 0 2 3')
+    parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
+    parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
+
+
+    parser.add_argument(
+        '-stream', dest='stream',
+        action='store', default="bottom",
+        help='ID or name of a stream, e.g. sample')
+    parser.add_argument(
+        '-continuous', dest='continuous',
+        action='store_true', default=False,
+        help='Continuous run flag')
+    parser.add_argument(
+        '-sampling-interval', dest='sampling_interval',
+        action='store', default=-1, type=int,
+        help='Sampling interval between inferencing')
+
+
+    return parser.parse_args()
+
+
+
+
+class VGG16():
+    def __init__(self, args, weightfile):
+        self.use_cuda = torch.cuda.is_available()
+        if self.use_cuda:
+            self.device = 'cuda'
+        else:
+            self.device = 'cpu'
+
+        self.model =  models.vgg16_bn()
+        self.model = torch.load(weightfile, map_location=self.device)
+        
+
+        self.model.eval()
+        self.class_names = ["cloud", "other", "smoke"]
+
+
+    def run(self, tile, args):
+
+        with open(tile, 'rb') as f:
+                image_bytes = f.read()
+                
+                conf,y_pre=get_prediction(model = self.model, image_bytes=image_bytes)
+                print(y_pre, ' at confidence score:{0:.2f}'.format(conf))
+
+
+        return y_pre, conf
 
 #vgg16 setup
 vgg16 = models.vgg16_bn()
@@ -82,8 +143,9 @@ def transform_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes))
     return my_transforms(image).unsqueeze(0)
 
+
 #performs inference on image
-def ImageInference(model, image):
+def ImageInference(image):
 
     fullimage = Image.open(image)
     fullimage = fullimage.resize((1344, 1344))
@@ -92,25 +154,11 @@ def ImageInference(model, image):
     data = []
     for i in range(6):
         for k in range(4):
-            model.load_state_dict(torch.load('/home/jszumny/Documents/copy of smoke data/newnew/attempts/invert/resnet50model.pt',map_location=torch.device('cpu')))
-
-            model.eval()
-
+            
             tile = fullimage.crop((i*224, k*224, (i+1)*224, (k+1)*224))
-            # tile = ImageChops.invert(tile)
-            tile.save('/home/jszumny/Documents/test/' + str(i) + "_" + str(k) + '.jpg')
+            pred, conf = VGG16.run(tile)
             
-            image_path= ("/home/jszumny/Documents/test/" + str(i) + "_" + str(k) + '.jpg')
-            image = plt.imread(image_path)
-            plt.imshow(image)
-            
-            with open(image_path, 'rb') as f:
-                image_bytes = f.read()
-                
-                conf,y_pre=get_prediction(model = model, image_bytes=image_bytes)
-                print(y_pre, ' at confidence score:{0:.2f}'.format(conf))
-        
-            d = {"xtile": str(i), "ytile": str(k),"class": y_pre, "percentage": '{0:.2f}'.format(conf)}
+            d = {"xtile": str(i), "ytile": str(k),"class": pred, "percentage": '{0:.2f}'.format(conf)}
             data.append(d)
             
     return data
@@ -119,7 +167,7 @@ def ImageInference(model, image):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--device", default=0, help="camera device to use")
+    parser.add_argument("--device", default="bottom", help="camera device to use")
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     args = parser.parse_args()
 
@@ -135,7 +183,7 @@ def main():
 
         for sample in cam.stream():
             logging.info("processing frame")
-            results = sample.data #ImageInference(sample.data)
+            results = ImageInference(sample.data)
             # print(sample.data)
             
             logging.info("image inference")
