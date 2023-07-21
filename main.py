@@ -167,7 +167,7 @@ def ImageInference(image):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--device", default="Bottom", help="camera device to use")
+    parser.add_argument("--device", default="bottom_camera", help="camera device to use")
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     args = parser.parse_args()
 
