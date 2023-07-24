@@ -23,6 +23,8 @@ import os
 import copy
 from PIL import Image, ImageChops
 import io
+import cv2
+from matplotlib import cm
 plt.ion()
 
 
@@ -74,22 +76,24 @@ class VGG16():
         self.model =  models.vgg16_bn()
         self.model = torch.load(weightfile, map_location=self.device)
         
-
+        self.model = self.model.half()
         self.model.eval()
         self.class_names = ["cloud", "other", "smoke"]
 
 
     def run(self, tile, args):
 
-        logging.info("Performing Inference on Given Tile")
-        with open(tile, 'rb') as f:
-                image_bytes = f.read()
-                
-                conf,y_pre=get_prediction(model = self.model, image_bytes=image_bytes)
-                print(y_pre, ' at confidence score:{0:.2f}'.format(conf))
+       
 
+        image = tile / 255.0
+        image = image.transpose((2, 0, 1))
+        image = torch.from_numpy(image).to(self.device).half()
+        image = image.unsqueeze(0)
 
-        return y_pre, conf
+        with torch.no_grad():
+            pred = self.model(image)[0]
+    
+        return pred, self.class_names
 
 #vgg16 setup
 vgg16 = models.vgg16_bn()
@@ -148,15 +152,14 @@ def transform_image(image_bytes):
 #performs inference on image
 def ImageInference(image):
     logging.info("Resizing and Cropping Image")
-    fullimage = image.resize((1344, 1344))
-    fullimage = fullimage.crop((0, 448, 1344, 1344))
-
+    fullimage = cv2.resize(image,(1344, 1344))
+    fullimage = fullimage[448:1344, 0:1344]
     logging.ingo("Looping through tiles")
     data = []
     for i in range(6):
         for k in range(4):
             
-            tile = fullimage.crop((i*224, k*224, (i+1)*224, (k+1)*224))
+            tile = fullimage[(i*224):((i+1)*224), (k*224):((k+1)*224)]
             pred, conf = VGG16.run(tile)
             
             d = {"xtile": str(i), "ytile": str(k),"class": pred, "percentage": '{0:.2f}'.format(conf)}
@@ -185,10 +188,11 @@ def main():
 
         for sample in cam.stream():
             logging.info("processing frame")
-            from matplotlib import cm
-            image = Image.fromarray(np.uint8(cm.gist_earth(sample.data)*255))
+            image = sample.data
+
             logging.info("grabbed image")
             results = ImageInference(image)
+
             # print(sample.data)
             results.to_csv("results.csv")
             logging.info("image inference")
