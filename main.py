@@ -154,7 +154,7 @@ def ImageInference(image):
     logging.info("Resizing and Cropping Image")
     fullimage = cv2.resize(image,(1344, 1344))
     fullimage = fullimage[448:1344, 0:1344]
-    logging.ingo("Looping through tiles")
+    logging.info("Looping through tiles")
     data = []
     for i in range(6):
         for k in range(4):
