@@ -150,7 +150,7 @@ def transform_image(image_bytes):
 
 
 #performs inference on image
-def ImageInference(image):
+def ImageInference(vgg16, image):
     logging.info("Resizing and Cropping Image")
     fullimage = cv2.resize(image,(1344, 1344))
     fullimage = fullimage[448:1344, 0:1344]
@@ -160,7 +160,7 @@ def ImageInference(image):
         for k in range(4):
             
             tile = fullimage[(i*224):((i+1)*224), (k*224):((k+1)*224)]
-            pred, conf = VGG16.run(tile=tile)
+            pred, conf = vgg16.run(tile=tile)
             
             d = {"xtile": str(i), "ytile": str(k),"class": pred, "percentage": '{0:.2f}'.format(conf)}
             data.append(d)
@@ -175,6 +175,8 @@ def main():
     parser.add_argument("--device", default="bottom_camera", help="camera device to use")
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     args = parser.parse_args()
+
+    vgg16 = VGG16(args, args.weight)
 
     logging.basicConfig(
         level=logging.INFO,
@@ -191,7 +193,7 @@ def main():
             image = sample.data
 
             logging.info("grabbed image")
-            results = ImageInference(image)
+            results = ImageInference(vgg16, image)
 
             # print(sample.data)
             results.to_csv("results.csv")
