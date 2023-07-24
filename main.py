@@ -187,7 +187,7 @@ def main():
             logging.info("processing frame")
             from matplotlib import cm
             image = Image.fromarray(np.uint8(cm.gist_earth(sample.data)*255))
-
+            logging.info("grabbed image")
             results = ImageInference(image)
             # print(sample.data)
             results.to_csv("results.csv")
