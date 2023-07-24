@@ -160,7 +160,7 @@ def ImageInference(image):
         for k in range(4):
             
             tile = fullimage[(i*224):((i+1)*224), (k*224):((k+1)*224)]
-            pred, conf = VGG16.run(tile)
+            pred, conf = VGG16.run(tile=tile)
             
             d = {"xtile": str(i), "ytile": str(k),"class": pred, "percentage": '{0:.2f}'.format(conf)}
             data.append(d)
