@@ -37,7 +37,7 @@ def get_arguments():
 
     parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
     parser.add_argument('--labels', dest='labels',
-                        action='store', default='coco.names', type=str,
+                        action='store', default='classes', type=str,
                         help='Labels for detection')
 
 
@@ -63,7 +63,8 @@ def get_arguments():
     return parser.parse_args()
 
 
-
+def load_class_names(namesfile):
+    return ["cloud",'other', 'smoke']
 
 class VGG16():
     def __init__(self, args, weightfile):
@@ -78,7 +79,7 @@ class VGG16():
         
         self.model = self.model.half()
         self.model.eval()
-        self.class_names = ["cloud", "other", "smoke"]
+        self.class_names = load_class_names(args.labels)
 
 
     def run(self, tile):
