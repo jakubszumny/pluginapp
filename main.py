@@ -81,7 +81,7 @@ class VGG16():
         self.class_names = ["cloud", "other", "smoke"]
 
 
-    def run(self, tile, args):
+    def run(self, tile):
 
        
 
