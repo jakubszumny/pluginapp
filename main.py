@@ -28,6 +28,7 @@ from matplotlib import cm
 plt.ion()
 
 
+print(torchvision)
 
 # models setup
 def get_arguments():
