@@ -75,7 +75,8 @@ class VGG16():
             self.device = 'cpu'
 
         self.model =  models.vgg16_bn()
-        self.model = torch.load(weightfile, map_location=self.device)
+        ckpt = torch.load(weightfile, map_location=self.device)
+        self.model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
         
         self.model = self.model.half()
         self.model.eval()
