@@ -35,7 +35,7 @@ def get_arguments():
         description="Evaluate a trained model on live images."
     )
 
-    parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
+    # parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
     parser.add_argument('--labels', dest='labels',
                         action='store', default='classes', type=str,
                         help='Labels for detection')
@@ -178,7 +178,7 @@ def main():
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     args = parser.parse_args()
 
-    vgg16 = VGG16(args, args.weight)
+    vgg16 = VGG16(args, "vgg16.pt")
 
     logging.basicConfig(
         level=logging.INFO,
