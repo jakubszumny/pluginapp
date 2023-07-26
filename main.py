@@ -176,14 +176,19 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", default="bottom_camera", help="camera device to use")
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
+    parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
     args = parser.parse_args()
 
-    vgg16 = VGG16(args, "vgg16.pt")
+    
 
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s %(message)s',
         datefmt='%Y/%m/%d %H:%M:%S')
+
+    logging.info("loading model weights")
+    vgg16 = VGG16(args, args.weight)
+    logging.info("model weights loaded")
 
     logging.info("starting plugin. will process a frame every %ss", args.interval)
 
