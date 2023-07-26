@@ -28,8 +28,7 @@ from matplotlib import cm
 plt.ion()
 
 
-print(torchvision)
-
+logging.info(print(torchvision))
 # models setup
 def get_arguments():
     parser = argparse.ArgumentParser(
