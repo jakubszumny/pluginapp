@@ -68,15 +68,18 @@ def load_class_names(namesfile):
 
 class VGG16():
     def __init__(self, args, weightfile):
+
         self.use_cuda = torch.cuda.is_available()
+
         if self.use_cuda:
             self.device = 'cuda'
         else:
             self.device = 'cpu'
 
+        
         self.model =  models.vgg16_bn()
-        ckpt = torch.load(weightfile, map_location=self.device)
-        self.model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
+        self.model = self.model.load_state_dict(torch.load(weightfile, map_location=self.device))
+        
         
         self.model = self.model.half()
         self.model.eval()
@@ -187,8 +190,11 @@ def main():
         datefmt='%Y/%m/%d %H:%M:%S')
 
     logging.info("loading model weights")
+
     vgg16 = VGG16(args, args.weight)
+
     logging.info("model weights loaded")
+
 
     logging.info("starting plugin. will process a frame every %ss", args.interval)
 
