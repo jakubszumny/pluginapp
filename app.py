@@ -176,7 +176,10 @@ def ImageInference(vgg16, image):
             
             tile = fullimage[(i*224):((i+1)*224), (k*224):((k+1)*224)]
 
-            with open(tile, 'rb') as f:
+
+            tile_bytes = cv2.imencode('.jpg', tile)[1].tobytes()
+
+            with open(tile_bytes, 'rb') as f:
                     image_bytes = f.read()
                     
                     conf,y_pre=get_prediction(vgg16,image_bytes=image_bytes)
