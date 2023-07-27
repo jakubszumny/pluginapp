@@ -100,16 +100,16 @@ class VGG16():
         return pred, self.class_names
 
 #vgg16 setup
-vgg16 = models.vgg16_bn()
+# vgg16 = models.vgg16_bn()
 
-for param in vgg16.features.parameters():
-    param.require_grad = False
+# for param in vgg16.features.parameters():
+#     param.require_grad = False
 class_names = ["cloud","other", "smoke"]
 
-num_features = vgg16.classifier[6].in_features
-features = list(vgg16.classifier.children())[:-1] # Remove last layer
-features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
-vgg16.classifier = nn.Sequential(*features) # Replace the model classifier
+# num_features = vgg16.classifier[6].in_features
+# features = list(vgg16.classifier.children())[:-1] # Remove last layer
+# features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
+# vgg16.classifier = nn.Sequential(*features) # Replace the model classifier
 
 
 # #resnet18 setup
