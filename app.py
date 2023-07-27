@@ -125,8 +125,6 @@ def load_model(type, weight):
     if type == "vgg16":
         model = models.vgg16_bn()
     
-        logging.info("loaded model")
-
         for param in model.features.parameters():
             param.require_grad = False
         class_names = ["cloud","other", "smoke"]
@@ -136,7 +134,6 @@ def load_model(type, weight):
         features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
         model.classifier = nn.Sequential(*features) # Replace the model classifier
 
-        logging.info("Altered Layers")
         trained_model = model.load_state_dict(torch.load(weight, map_location=torch.device('cuda')))
     
 
@@ -178,9 +175,14 @@ def ImageInference(vgg16, image):
         for k in range(4):
             
             tile = fullimage[(i*224):((i+1)*224), (k*224):((k+1)*224)]
-            pred, conf = vgg16.run(tile=tile)
+
+            with open(tile, 'rb') as f:
+                    image_bytes = f.read()
+                    
+                    conf,y_pre=get_prediction(vgg16,image_bytes=image_bytes)
+                    
             
-            d = {"xtile": str(i), "ytile": str(k),"class": pred, "percentage": '{0:.2f}'.format(conf)}
+            d = {"xtile": str(i), "ytile": str(k),"class": y_pre, "percentage": '{0:.2f}'.format(conf)}
             data.append(d)
     
     df = pd.DataFrame(data)
@@ -206,9 +208,11 @@ def main():
    
 
     logging.info("loading model weights")
+
     model = load_model(args.model, args.weight)
 
     logging.info("model weights loaded")
+
 
 
     logging.info("starting plugin. will process a frame every %ss", args.interval)
