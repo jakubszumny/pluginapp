@@ -65,41 +65,41 @@ def get_arguments():
 def load_class_names(namesfile):
     return ["cloud",'other', 'smoke']
 
-class VGG16():
-    def __init__(self, vgg16, args, weightfile):
+# class VGG16():
+#     def __init__(self, vgg16, args, weightfile):
 
-        self.use_cuda = torch.cuda.is_available()
+#         self.use_cuda = torch.cuda.is_available()
 
-        self.model = vgg16
+#         self.model = vgg16
 
-        if self.use_cuda:
-            self.device = 'cuda'
-        else:
-            self.device = 'cpu'
+#         if self.use_cuda:
+#             self.device = 'cuda'
+#         else:
+#             self.device = 'cpu'
 
-        logging.info("ini class")
-        self.model.load_state_dict(torch.load(weightfile))
+#         logging.info("ini class")
+#         self.model.load_state_dict(torch.load(weightfile))
         
-        logging.info("model is in")
+#         logging.info("model is in")
         
-        self.model = self.model.half()
-        self.model.eval()
-        self.class_names = load_class_names(args.labels)
+#         self.model = self.model.half()
+#         self.model.eval()
+#         self.class_names = load_class_names(args.labels)
 
 
-    def run(self, tile):
+#     def run(self, tile):
 
        
 
-        image = tile / 255.0
-        image = image.transpose((2, 0, 1))
-        image = torch.from_numpy(image).to(self.device).half()
-        image = image.unsqueeze(0)
+#         image = tile / 255.0
+#         image = image.transpose((2, 0, 1))
+#         image = torch.from_numpy(image).to(self.device).half()
+#         image = image.unsqueeze(0)
 
-        with torch.no_grad():
-            pred = self.model(image)[0]
+#         with torch.no_grad():
+#             pred = self.model(image)[0]
     
-        return pred, self.class_names
+#         return pred, self.class_names
 
 # vgg16 setup
 model = models.vgg16_bn()
@@ -182,7 +182,7 @@ def main():
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
     args = parser.parse_args()
-
+    weightfile = 'vgg16.pt'
     
 
     logging.basicConfig(
@@ -191,8 +191,8 @@ def main():
         datefmt='%Y/%m/%d %H:%M:%S')
 
     logging.info("loading model weights")
-
-    vgg16 = VGG16(model, args, args.weight)
+    vgg16 = model.load_state_dict(torch.load(weightfile))
+    # vgg16 = VGG16(model, args, args.weight)
 
     logging.info("model weights loaded")
 
