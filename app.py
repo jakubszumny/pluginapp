@@ -135,7 +135,7 @@ def load_model(type, weight):
         model.classifier = nn.Sequential(*features) # Replace the model classifier
 
         trained_model = model.load_state_dict(torch.load(weight, map_location=torch.device('cuda')))
-    
+        trained_model.eval()
 
     return trained_model
 
