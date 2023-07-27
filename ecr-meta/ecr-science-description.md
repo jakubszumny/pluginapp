@@ -1,3 +1,3 @@
-# Hello World - Numpy Plugin Example
+# Smoke Detection - Sage Plugin For Wildfire Smoke Detection
 
-This is a minimal plugin intended to help new Sage users start writing plugins.
+This is a smoke detection plugin used to detect smoke through sage nodes.
