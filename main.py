@@ -102,16 +102,16 @@ def load_class_names(namesfile):
 #         return pred, self.class_names
 
 # vgg16 setup
-model = models.vgg16_bn()
+# model = models.vgg16_bn()
 
-for param in model.features.parameters():
-    param.require_grad = False
+# for param in model.features.parameters():
+#     param.require_grad = False
 class_names = ["cloud","other", "smoke"]
 
-num_features = model.classifier[6].in_features
-features = list(model.classifier.children())[:-1] # Remove last layer
-features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
-model.classifier = nn.Sequential(*features) # Replace the model classifier
+# num_features = model.classifier[6].in_features
+# features = list(model.classifier.children())[:-1] # Remove last layer
+# features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
+# model.classifier = nn.Sequential(*features) # Replace the model classifier
 
 
 # #resnet18 setup
@@ -182,7 +182,7 @@ def main():
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
     args = parser.parse_args()
-    weightfile = 'vgg16.pt'
+   
     
 
     logging.basicConfig(
@@ -190,8 +190,21 @@ def main():
         format='%(asctime)s %(message)s',
         datefmt='%Y/%m/%d %H:%M:%S')
 
+    vgg16 = models.vgg16(args.weight)
+    logging.info("loaded model")
+
+    # for param in vgg16.features.parameters():
+    #     param.require_grad = False
+    # class_names = ["cloud","other", "smoke"]
+
+    # num_features = model.classifier[6].in_features
+    # features = list(model.classifier.children())[:-1] # Remove last layer
+    # features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
+    # model.classifier = nn.Sequential(*features) # Replace the model classifier
+
+
     logging.info("loading model weights")
-    vgg16 = model.load_state_dict(torch.load(weightfile))
+    # vgg16 = model.load_state_dict(torch.load(weightfile))
     # vgg16 = VGG16(model, args, args.weight)
 
     logging.info("model weights loaded")
