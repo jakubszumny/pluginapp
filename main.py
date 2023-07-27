@@ -190,7 +190,7 @@ def main():
         format='%(asctime)s %(message)s',
         datefmt='%Y/%m/%d %H:%M:%S')
 
-    vgg16 = models.vgg16(args.weight)
+    vgg16 = models.vgg16(weights = args.weight)
     logging.info("loaded model")
 
     # for param in vgg16.features.parameters():
