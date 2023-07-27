@@ -143,12 +143,12 @@ def load_model(type, weight):
 
 #Gets Prediction of Tile
 def get_prediction(model, image_bytes):
+    logging.info("Transforming Image")
     tensor = transform_image(image_bytes=image_bytes)
     output = model.forward(tensor)
-     
+    
     probs = torch.nn.functional.softmax(output, dim=1)
     conf, classes = torch.max(probs, 1)
-    print(classes.item())
     return conf.item(), class_names[classes.item()]
 
 
@@ -181,10 +181,11 @@ def ImageInference(vgg16, image):
 
             # with open(tile_bytes, 'rb') as f:
             #         image_bytes = f.read()
-                    
-            conf,y_pre=get_prediction(vgg16,image_bytes=image_bytes)
-                    
             
+            logging.info("Getting Prediction")
+            conf,y_pre=get_prediction(vgg16,image_bytes=image_bytes)
+            logging.info("Prediction Inferred")
+            logging.info(str(y_pre))
             d = {"xtile": str(i), "ytile": str(k),"class": y_pre, "percentage": '{0:.2f}'.format(conf)}
             data.append(d)
     
