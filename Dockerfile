@@ -1,7 +1,7 @@
 FROM waggle/plugin-base:1.1.1-ml
 COPY requirements.txt /app/
 
-RUN /usr/bin/python3 -m pip install --upgrade pip
+
 RUN pip3 install --no-cache-dir --upgrade -r /app/requirements.txt
 COPY . /app/
 
