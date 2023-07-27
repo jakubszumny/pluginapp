@@ -1,4 +1,4 @@
-name: "Smoke-Detection"
+name: "smoke-detection"
 description: "Detects Smoke In Live Camera Images"
 version: "0.3.0"
 authors: "Jakub Szumny <jszumny@anl.gov>"
