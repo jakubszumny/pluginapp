@@ -2,4 +2,4 @@
 pywaggle[all]==0.55.*
 
 # Custom Python modules. Please add your requirements below.
-tkinter
+
