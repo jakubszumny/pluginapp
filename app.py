@@ -101,17 +101,8 @@ def load_class_names(namesfile):
     
 #         return pred, self.class_names
 
-# vgg16 setup
-# model = models.vgg16_bn()
 
-# for param in model.features.parameters():
-#     param.require_grad = False
 class_names = ["cloud","other", "smoke"]
-
-# num_features = model.classifier[6].in_features
-# features = list(model.classifier.children())[:-1] # Remove last layer
-# features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
-# model.classifier = nn.Sequential(*features) # Replace the model classifier
 
 
 # #resnet18 setup
@@ -152,8 +143,6 @@ def load_model(type, weight):
 
 
 
-
-
 #Gets Prediction of Tile
 def get_prediction(model, image_bytes):
     tensor = transform_image(image_bytes=image_bytes)
@@ -163,6 +152,7 @@ def get_prediction(model, image_bytes):
     conf, classes = torch.max(probs, 1)
     print(classes.item())
     return conf.item(), class_names[classes.item()]
+
 
 #Transforms Image Into Tensor
 def transform_image(image_bytes):
@@ -201,7 +191,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", default="bottom_camera", help="camera device to use")
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
-    parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
+    parser.add_argument('--weight', type=str, default='/app/vgg16.pt', help='model name')
     parser.add_argument("--model", default = "vgg16", help = "model to use")
     args = parser.parse_args()
    
