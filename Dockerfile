@@ -7,5 +7,5 @@ COPY . /app/
 
 ADD https://web.lcrc.anl.gov/public/waggle/models/jszumny/attempts/3features/vgg16.pt /main/vgg16.pt
 
-WORKDIR /main
+WORKDIR /app
 ENTRYPOINT ["python3", "/app/main.py"]
