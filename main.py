@@ -129,6 +129,27 @@ class_names = ["cloud","other", "smoke"]
 # num_features = resnet50.fc.in_features     #extract fc layers features
 # resnet50.fc = nn.Linear(num_features, 3) #(num_of_class == 2)
 
+def load_model(type, weight):
+    
+    if type == "vgg16":
+        model = models.vgg16_bn()
+    
+        logging.info("loaded model")
+
+        for param in model.features.parameters():
+            param.require_grad = False
+        class_names = ["cloud","other", "smoke"]
+
+        num_features = model.classifier[6].in_features
+        features = list(model.classifier.children())[:-1] # Remove last layer
+        features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
+        model.classifier = nn.Sequential(*features) # Replace the model classifier
+
+        trained_model = model.load_state_dict(torch.load(weight, map_location=torch.device('cuda')))
+    
+
+    return trained_model
+
 
 
 
@@ -181,6 +202,7 @@ def main():
     parser.add_argument("--device", default="bottom_camera", help="camera device to use")
     parser.add_argument("--interval", default=10, type=float, help="sampling interval in seconds")
     parser.add_argument('--weight', type=str, default='vgg16.pt', help='model name')
+    parser.add_argument("--model", default = "vgg16", help = "model to use")
     args = parser.parse_args()
    
     
@@ -190,22 +212,10 @@ def main():
         format='%(asctime)s %(message)s',
         datefmt='%Y/%m/%d %H:%M:%S')
 
-    vgg16 = models.vgg16_bn()
-    logging.info("loaded model")
-
-    # for param in vgg16.features.parameters():
-    #     param.require_grad = False
-    # class_names = ["cloud","other", "smoke"]
-
-    # num_features = model.classifier[6].in_features
-    # features = list(model.classifier.children())[:-1] # Remove last layer
-    # features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
-    # model.classifier = nn.Sequential(*features) # Replace the model classifier
-
+   
 
     logging.info("loading model weights")
-    # vgg16 = model.load_state_dict(torch.load(weightfile))
-    # vgg16 = VGG16(model, args, args.weight)
+    model = load_model(args.model, args.weight)
 
     logging.info("model weights loaded")
 
@@ -220,7 +230,7 @@ def main():
             image = sample.data
 
             logging.info("grabbed image")
-            results = ImageInference(vgg16, image)
+            results = ImageInference(model, image)
 
             # print(sample.data)
             results.to_csv("results.csv")
