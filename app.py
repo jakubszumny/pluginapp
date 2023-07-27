@@ -136,6 +136,7 @@ def load_model(type, weight):
         features.extend([nn.Linear(num_features, len(class_names))]) # Add our layer with 4 outputs
         model.classifier = nn.Sequential(*features) # Replace the model classifier
 
+        logging.info("Altered Layers")
         trained_model = model.load_state_dict(torch.load(weight, map_location=torch.device('cuda')))
     
 
