@@ -76,9 +76,8 @@ class VGG16():
             self.device = 'cpu'
 
         logging.info("ini class")
-        self.model =  models.vgg16_bn()
-        logging.info("base model")
-        self.model = self.model.load_state_dict(torch.load(weightfile, map_location=self.device))
+        self.model = models.vgg16(weightfile)
+        
         logging.info("model is in")
         
         self.model = self.model.half()
