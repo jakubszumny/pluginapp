@@ -235,7 +235,7 @@ def main():
             # print(sample.data)
             results.to_csv("results.csv")
             logging.info("image inference")
-            logging.info("data: %s", results["data"])
+            # logging.info("data: %s", results["data"])
         
             plugin.upload_file("results.csv")
 
