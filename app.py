@@ -168,9 +168,10 @@ def transform_image(image_bytes):
 def ImageInference(vgg16, image):
     logging.info("Resizing and Cropping Image")
     fullimage = cv2.resize(image,(1344, 1344))
-    fullimage = fullimage[448:1344, 0:1344]
+    fullimage = fullimage[0:1344, 448:1344]
     logging.info("Looping through tiles")
     data = []
+    count = 0
     for i in range(6):
         for k in range(4):
             
@@ -181,8 +182,8 @@ def ImageInference(vgg16, image):
 
             # with open(tile_bytes, 'rb') as f:
             #         image_bytes = f.read()
-            
-            logging.info("Getting Prediction")
+            count+=1
+            logging.info("Getting Prediction of: " + str(count))
             conf,y_pre=get_prediction(vgg16,image_bytes=image_bytes)
             logging.info("Prediction Inferred")
             logging.info(str(y_pre))
