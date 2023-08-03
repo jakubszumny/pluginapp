@@ -238,7 +238,7 @@ def main():
             # logging.info("data: %s", results["data"])
         
             plugin.upload_file("results.csv")
-
+            plugin.upload_file(image)
             plugin.publish("smoke_detection", len(results[results["class"] == "smoke"]))
            
             logging.info("published summary")
