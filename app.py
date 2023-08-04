@@ -168,14 +168,14 @@ def transform_image(image_bytes):
 def ImageInference(vgg16, image):
     logging.info("Resizing and Cropping Image")
     fullimage = cv2.resize(image,(1344, 1344))
-    fullimage = fullimage[0:1344, 448:1344]
+    fullimage = fullimage[488:1344, 0:1344]
     logging.info("Looping through tiles")
     data = []
     count = 0
     for i in range(6):
         for k in range(4):
             
-            tile = fullimage[(i*224):((i+1)*224), (k*224):((k+1)*224)]
+            tile = fullimage[(k*224):((k+1)*224), (i*224):((i+1)*224)]
 
 
             image_bytes = cv2.imencode('.jpg', tile)[1].tobytes()
@@ -191,7 +191,7 @@ def ImageInference(vgg16, image):
             data.append(d)
     
     df = pd.DataFrame(data)
-    return df
+    return df, fullimage
 
 
 
@@ -230,15 +230,17 @@ def main():
             image = sample.data
 
             logging.info("grabbed image")
-            results = ImageInference(model, image)
+            results, fullimage = ImageInference(model, image)
 
             # print(sample.data)
             results.to_csv("results.csv")
             logging.info("image inference")
             # logging.info("data: %s", results["data"])
-        
+
+            cv2.imwrite("frame.jpg", fullimage)
+
             plugin.upload_file("results.csv")
-            plugin.upload_file(image)
+            plugin.upload("frame.jpg")
             plugin.publish("smoke_detection", len(results[results["class"] == "smoke"]))
            
             logging.info("published summary")
