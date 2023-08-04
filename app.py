@@ -240,7 +240,7 @@ def main():
             cv2.imwrite("frame.jpg", fullimage)
 
             plugin.upload_file("results.csv")
-            plugin.upload("frame.jpg")
+            plugin.upload_file("frame.jpg")
             plugin.publish("smoke_detection", len(results[results["class"] == "smoke"]))
            
             logging.info("published summary")
