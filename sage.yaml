@@ -7,6 +7,5 @@ source:
   architectures:
     - "linux/amd64"
     - "linux/arm64"
-    - "linux/arm/v7"
   url: "https://github.com/jakubszumny/pluginapp"
   branch: "main"
